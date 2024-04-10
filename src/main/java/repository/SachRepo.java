@@ -30,7 +30,15 @@ public class SachRepo {
             e.printStackTrace();
         }
     }
-
+    public void update(Sach sach) {
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            session.beginTransaction();
+            session.update(sach);
+            session.getTransaction().commit();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void delete(Sach sach) {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             session.beginTransaction();

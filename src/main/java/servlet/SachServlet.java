@@ -5,6 +5,7 @@ import entity.Sach;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.Session;
 import repository.PageRepo;
 import repository.SachRepo;
@@ -17,7 +18,9 @@ import java.util.List;
         "/sach/index",
         "/sach/store",
         "/sach/create",
-        "/sach/delete"
+        "/sach/delete",
+        "/sach/edit",
+        "/sach/update"
 })
 public class SachServlet extends HttpServlet {
     SachRepo sachRepo = new SachRepo();
@@ -31,7 +34,16 @@ public class SachServlet extends HttpServlet {
             this.create(request,response);
         } else if (uri.contains("delete")) {
             this.delete(request,response);
+        } else if (uri.contains("edit")) {
+            this.edit(request,response);
         }
+    }
+
+    private void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String idS = request.getParameter("id");
+        int id = Integer.parseInt(idS);
+        request.setAttribute("data", this.sachRepo.findById(id));
+        request.getRequestDispatcher("/views/edit.jsp").forward(request,response);
     }
 
     @Override
@@ -39,8 +51,31 @@ public class SachServlet extends HttpServlet {
         String uri = request.getRequestURI();
         if(uri.contains("store")) {
             this.store(request,response);
+        } else if (uri.contains("update")) {
+            this.update(request,response);
         }
     }
+
+    private void update(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        String ma = request.getParameter("ma");
+//        String ten = request.getParameter("ten");
+//        String idNXB = request.getParameter("idNXB");
+//        Sach sach = new Sach();
+//        sach.setMa(ma);
+//        sach.setTen(ten);
+//        sach.setIdNXB(Integer.parseInt(idNXB));
+//        sachRepo.update(sach);
+//        response.sendRedirect("/sach/index");
+        Sach sach = new Sach();
+        try {
+            BeanUtils.populate(sach, request.getParameterMap());
+            this.sachRepo.update(sach);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        response.sendRedirect("/sach/index");
+    }
+
     private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<NXB> listNXB = sachRepo.getNXB();
         request.setAttribute("nxb",listNXB);

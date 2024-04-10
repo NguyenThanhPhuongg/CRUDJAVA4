@@ -29,14 +29,18 @@
                     <a href="/sach/delete?idSach=${sach.id}">
                         <button>delete</button>
                     </a>
+                    <a href="/sach/edit?id=${sach.id}">
+                        <button>Update</button>
+                    </a>
                 </td>
             </tr>
         </c:forEach>
     </table>
     <div>
         <c:if test="${curentPage > 1}">
-            <a href="/sach/index?page=1">first</a>
-            <a href="/sach/index?page=${curentPage-1}">prev</a>
+            <a href="/sach/index?page=1"><button>first</button></a>
+            <a href="/sach/index?page=${curentPage-1}">
+                <button>prev</button></a>
         </c:if>
         <c:forEach begin="1" end="${tutolPage}" varStatus="i">
             <c:url value="/sach/index?page=${i.index}" var="pageNumberUrl">
@@ -52,10 +56,9 @@
                 </c:otherwise>
             </c:choose>
         </c:forEach>
-
         <c:if test="${curentPage < tutolPage}">
-            <a href="/sach/index?page=${curentPage+1}">Next</a>
-            <a href="/sach/index?page=${tutolPage}">Last</a>
+            <a href="/sach/index?page=${curentPage+1}"><button>Next</button></a>
+            <a href="/sach/index?page=${tutolPage}"><button>Last</button></a>
         </c:if>
     </div>
 </div>
